@@ -148,6 +148,11 @@ status_t PreviewThread::readyToRun()
     }
 #endif
 
+    // Workaround for `timeout wait for decimator stopping' while
+    // preview mode is *NOT* 800x600
+    if (Width != 800)
+        Sensor->setFormat(800, 600, V4L2_MBUS_FMT_YUYV8_2X8);
+
     ret = Sensor->setFormat(Width, Height, V4L2_MBUS_FMT_YUYV8_2X8);
     if (ret < 0) {
         ALOGE("failed to v4l2_set_format for %d", SensorId);
